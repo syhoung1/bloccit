@@ -1,3 +1,17 @@
 h1 {
     color: red;
 }
+
+.social-btn {
+    display: table;
+    position: border-box;
+    border: solid black 1px;
+    border-radius: 4px;
+    padding: .5em;
+    margin: .5em;
+    bottom: 0;
+}
+
+.social-btn:hover {
+    text-decoration: none;
+}

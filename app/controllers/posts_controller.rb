@@ -26,5 +26,32 @@ class PostsController < ApplicationController
   end
 
   def edit
+    @post = Post.find(params[:id])
+  end
+  
+  def update
+    @post = Post.find(params[:id])
+    @post.title = params[:post][:title]
+    @post.body = params[:post][:body]
+    
+    if @post.save
+      flash[:notice] = "Updates saved"
+      redirect_to @post
+    else
+      flash.now[:alert] = "There was an error in updating"
+      render :edit
+    end
+  end
+  
+  def destroy
+    @post = Post.find(params[:id])
+    
+    if @post.destroy
+      flash[:notice] = "\"#{@post.title}\" was deleted."
+      redirect_to posts_path
+    else
+      flash.now[:alert] = "Something went wrong!"
+      render :show
+    end
   end
 end

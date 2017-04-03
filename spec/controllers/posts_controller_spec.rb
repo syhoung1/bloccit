@@ -39,7 +39,7 @@ RSpec.describe PostsController, type: :controller do
 
     it "renders the #new view" do
       get :new
-      expect(response).to render_template :new
+      expect(response).to render_template(:new)
     end
 
     it "instantiates @post" do
@@ -115,7 +115,7 @@ RSpec.describe PostsController, type: :controller do
     end
     
     it "redirects to the index" do
-      delete :destroy, {id:my_post.id}
+      delete :destroy, {id: my_post.id}
       expect(response).to redirect_to posts_path
     end
   end

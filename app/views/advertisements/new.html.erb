@@ -1,0 +1,17 @@
+<div class="row col-md-4">
+  <%= form_for @advertisement do |f| %>
+  <div class="form-group">
+    <%= f.label :title %>
+    <%= f.text_field :title, class: "form-control", placeholder: "Advertisement title" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :body %>
+    <%= f.text_area :body, class: "form-control", placeholder: "Description" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :price %>
+    <%= f.text_field :price, class: "form-control", placeholder: "Price" %>
+  </div>
+    <%= f.submit "Save" %>
+  <% end %>
+</div>

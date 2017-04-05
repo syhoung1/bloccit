@@ -14,7 +14,6 @@
     <%= f.label :title %>
     <%= f.text_field :title, class: 'form-control', placeholder: 'Enter title' %>
   <% end %>
-  
   <%= form_group_tag(post.errors[:body]) do %>
     <%= f.label :body %>
     <%= f.text_area :body, rows: 8, class: 'form-control', placeholder: 'Enter body text' %>

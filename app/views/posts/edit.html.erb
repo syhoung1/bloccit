@@ -10,18 +10,6 @@
     </ul>
   </div>
   <div class="col-md-8">
-    <%= form_for [@post.topic, @post] do |f| %>
-      <div class="form-group">
-        <%= f.label :title %>
-        <%= f.text_field :title, class: "form-control", placeholder: "Enter title" %>
-      </div>
-      <div class="form-group">
-        <%= f.label :body %>
-        <%= f.text_area :body, class: "form-control", placeholder: "Enter body text" %>
-      </div>
-      <div class="form-group">
-        <%= f.submit "Save", class: "btn btn-success" %>
-      </div>
+    <%= render partial: 'form', locals: { topic: @post.topic, post: @post } %>
   </div>
-  <% end %>
 </div>

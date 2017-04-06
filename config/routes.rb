@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :topics do
     resources :posts, except: [:index]
   end
-
+  resources :sessions, only: [:new, :create, :destroy]
   get 'about' => 'welcome#about'
 
   get 'welcome/FAQ'

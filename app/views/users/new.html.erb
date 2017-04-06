@@ -20,7 +20,7 @@
       <% end %>
       <%= form_group_tag(@user.errors[:email]) do %>
         <%= f.label :email %>
-        <%= f.email_field :name, class: 'form-control', placeholder: 'Email@email.com' %>
+        <%= f.email_field :email, class: 'form-control', placeholder: 'Email@email.com' %>
       <% end %>
       <%= form_group_tag(@user.errors[:password]) do %>
         <%= f.label :password %>

@@ -1,0 +1,8 @@
+<div class='row'>
+  <h1>Sign up confirmation</h1>
+  <p>Are you sure this is the correct information?</p>
+  <h3><%= @user.email %></h2>
+  <h3><%= @user.name %></h3>
+</div>
+<%= button_to "yes", {:controller => "users", :action => "create", :params => params}, class: 'btn btn-success' %>
+<%= button_to "no", {:controller => "users", :action => "new"}, class: 'btn', :method => :get %>

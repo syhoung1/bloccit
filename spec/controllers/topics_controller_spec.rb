@@ -1,121 +1,355 @@
 require 'rails_helper'
+include SessionsHelper
 
 RSpec.describe TopicsController, type: :controller do
-  let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
-  describe "GET index" do
-    it "returns http success" do
-      get :index
-      expect(response).to have_http_status(:success)
+let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
+  
+  context 'guest user' do
+    
+    describe 'GET index' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+  
+      it 'assigns my_topic to @topics' do
+        get :index
+        expect(assigns(:topics)).to eq([my_topic])
+      end
     end
 
-    it "assigns my_topic to @topics" do
-      get :index
-      expect(assigns(:topics)).to eq([my_topic])
-    end
-  end
-
-  describe "GET show" do
-    it "returns http success" do
-      get :show, {id: my_topic.id}
-      expect(response).to have_http_status(:success)
-    end
-
-    it "renders the show view" do
-      get :show, {id: my_topic.id}
-      expect(response).to render_template(:show)
-    end
-
-    it "assigns my_topic to @topics" do
-      get :show, {id: my_topic.id}
-      expect(assigns(:topic)).to eq(my_topic)
-    end
-  end
-
-  describe "GET new" do
-    it "returns http success" do
-      get :new
-      expect(response).to have_http_status(:success)
-    end
-
-    it "renders the new view" do
-      get :new
-      expect(response).to render_template(:new)
+    describe 'GET show' do
+      it 'returns http success' do
+        get :show, {id: my_topic.id}
+        expect(response).to have_http_status(:success)
+      end
+  
+      it 'renders the show view' do
+        get :show, {id: my_topic.id}
+        expect(response).to render_template(:show)
+      end
+  
+      it 'assigns my_topic to @topics' do
+        get :show, {id: my_topic.id}
+        expect(assigns(:topic)).to eq(my_topic)
+      end
     end
     
-    it "initializes the topic" do
-      get :new
-      expect(assigns(:topic)).not_to be_nil
+    describe 'GET new' do
+      it 'returns http redirect' do
+        get :new
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+    
+    describe 'POST create' do
+      it 'returns http redirect' do
+        post :create, topic: { name: RandomData.random_sentence, description: RandomData.random_paragraph }
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+    
+    describe 'GET edit' do
+      it 'returns http redirect' do
+        get :edit, {id: my_topic.id}
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+    
+    describe 'PUT update' do
+      it 'returns http redirect' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: { name: new_name, description: new_description }
+        expect(response).to redirect_to(new_session_path)
+      end
+    end
+    
+    describe 'DELETE destroy' do
+      it 'returns http redirect' do
+        delete :destroy, { id: my_topic.id }
+        expect(response).to redirect_to(new_session_path)
+      end
     end
   end
+  
+  context 'member user' do
+    before do
+      user = User.create!(name: 'john doe', email: 'thisemail@here.com', password: 'thisisapassword', role: :member)
+      create_session(user)
+    end
+    
+    describe 'GET index' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+      
+      it 'assigns all Topic.all to topic' do
+        get :index
+        expect(assigns(:topics)).to eq([my_topic])
+      end
+    end
+    
+    describe 'GET show' do
+      it 'returns http success' do
+        get :show, { id: my_topic.id }
+        expect(response).to have_http_status(:success)
+      end
+      
+      it 'renders the show view' do
+        get :show, { id: my_topic.id }
+        expect(response).to render_template(:show)
+      end
+      
+      it 'assigns my_topic to @topic' do
+        get :show, { id: my_topic.id }
+        expect(assigns(:topic)).to eq(my_topic)
+      end
+    end
+    
+    describe 'GET new' do
+      it 'returns http redirect' do
+        get :new
+        expect(response).to redirect_to(topics_path)
+      end
+    end
+    
+    describe 'POST create' do
+      it 'returns http redirect' do
+        post :create, topic: { name: RandomData.random_sentence, description: RandomData.random_paragraph }
+        expect(response).to redirect_to(topics_path)
+      end
+    end
+    
+    describe 'GET edit' do
+      it 'returns http redirect' do
+        get :edit, { id: my_topic.id }
+        expect(response).to redirect_to(topics_path)
+      end
+    end
+    
+    describe 'PUT update' do
+      it 'returns http redirect' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: { name: new_name, description: new_description }
+        expect(response).to redirect_to(topics_path)
+      end
+    end
+    
+    describe 'DELETE destroy' do
+      it 'returns http redirect' do
+        delete :destroy, { id: my_topic.id }
+        expect(response).to redirect_to(topics_path)
+      end
+    end
+  end
+  
+  context 'admin user' do
+    
+    before do
+      user = User.create!(name: 'john', email: 'thisis@my.com', password: 'password1234', role: :admin)
+      create_session(user)
+    end
+    
+    describe 'GET index' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
+      
+      it 'assigns Topic.all to topic' do
+        get :index
+        expect(assigns(:topics)).to eq([my_topic])
+      end
+    end
+    
+    describe 'GET show' do
+      it 'returns http success' do
+        get :show, { id: my_topic.id }
+        expect(response).to have_http_status(:success)
+      end
+      
+      it 'renders the show view' do
+        get :show, { id: my_topic.id }
+        expect(response).to render_template(:show)
+      end
+      
+      it 'assigns my_topic to @topic' do
+        get :show, { id: my_topic.id }
+        expect(assigns(:topic)).to eq(my_topic)
+      end
+    end
 
-  describe "POST create" do
-    it "increases the number of topics by 1" do
-      expect{ post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}}.to change(Topic,:count).by(1)
+    describe 'GET new' do
+      it 'returns http success' do
+        get :new
+        expect(response).to have_http_status(:success)
+      end
+  
+      it 'renders the new view' do
+        get :new
+        expect(response).to render_template(:new)
+      end
+      
+      it 'initializes the topic' do
+        get :new
+        expect(assigns(:topic)).not_to be_nil
+      end
     end
   
-    it "assigns Topic.last to @topic" do
-      post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}
-      expect(assigns(:topic)).to eq Topic.last
+    describe 'POST create' do
+      it 'increases the number of topics by 1' do
+        expect{ post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}}.to change(Topic,:count).by(1)
+      end
+    
+      it 'assigns Topic.last to @topic' do
+        post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}
+        expect(assigns(:topic)).to eq Topic.last
+      end
+  
+      it 'redirects to the new post' do
+        post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}
+        expect(response).to redirect_to Topic.last
+      end
     end
-
-    it "redirects to the new post" do
-      post :create, {topic: {name: RandomData.random_sentence, description: RandomData.random_paragraph}}
-      expect(response).to redirect_to Topic.last
+  
+    describe 'GET edit' do
+      it 'returns http success' do
+        get :edit, {id: my_topic.id}
+        expect(response).to have_http_status(:success)
+      end
+  
+      it 'renders the edit view' do
+        get :edit, {id: my_topic.id}
+        expect(response).to render_template(:edit)
+      end
+      
+      it 'assigns topic to be edited to @topic' do
+        get :edit, {id: my_topic.id}
+        topic_instance = assigns(:topic)
+        
+        expect(topic_instance.id).to eq my_topic.id
+        expect(topic_instance.name).to eq my_topic.name
+        expect(topic_instance.description).to eq my_topic.description
+      end
+    end
+  
+    describe 'PUT update' do
+      it 'updates topic with expected attributes' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+        
+        updated_topic = assigns(:topic)
+        expect(updated_topic.id).to eq my_topic.id
+        expect(updated_topic.name).to eq new_name
+        expect(updated_topic.description).to eq new_description
+      end
+      
+      it 'redirects to the new topic' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+        expect(response).to redirect_to my_topic
+      end
+    end
+  
+    describe 'DELETE destroy' do
+      it 'deletes the topic' do
+        delete :destroy, {id: my_topic.id}
+        expect(Post.where({id: my_topic.id}).size).to eq 0
+      end
+  
+      it 'redirects to the topic index' do
+        delete :destroy, {id: my_topic.id}
+        expect(response).to redirect_to topics_path
+      end
     end
   end
-
-  describe "GET edit" do
-    it "returns http success" do
-      get :edit, {id: my_topic.id}
-      expect(response).to have_http_status(:success)
-    end
-
-    it "renders the edit view" do
-      get :edit, {id: my_topic.id}
-      expect(response).to render_template(:edit)
+  
+  context 'moderator user' do
+    before do
+      user = User.create!(name: "moderator", email: "moderating@moderator.com", password: "password", role: :moderator)
+      create_session(user)
     end
     
-    it "assigns topic to be edited to @topic" do
-      get :edit, {id: my_topic.id}
-      topic_instance = assigns(:topic)
+    describe 'GET index' do
+      it 'returns http success' do
+        get :index
+        expect(response).to have_http_status(:success)
+      end
       
-      expect(topic_instance.id).to eq my_topic.id
-      expect(topic_instance.name).to eq my_topic.name
-      expect(topic_instance.description).to eq my_topic.description
-    end
-  end
-
-  describe "PUT update" do
-    it 'updates topic with expected attributes' do
-      new_name = RandomData.random_sentence
-      new_description = RandomData.random_paragraph
-      
-      put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
-      
-      updated_topic = assigns(:topic)
-      expect(updated_topic.id).to eq my_topic.id
-      expect(updated_topic.name).to eq new_name
-      expect(updated_topic.description).to eq new_description
+      it 'assigns all Topic.all to topic' do
+        get :index
+        expect(assigns(:topics)).to eq([my_topic])
+      end
     end
     
-    it 'redirects to the new topic' do
-      new_name = RandomData.random_sentence
-      new_description = RandomData.random_paragraph
+    describe 'GET show' do
+      it 'returns http success' do
+        get :show, { id: my_topic.id }
+        expect(response).to have_http_status(:success)
+      end
       
-      put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
-      expect(response).to redirect_to my_topic
+      it 'renders the show view' do
+        get :show, { id: my_topic.id }
+        expect(response).to render_template(:show)
+      end
+      
+      it 'assigns my_topic to @topic' do
+        get :show, { id: my_topic.id }
+        expect(assigns(:topic)).to eq(my_topic)
+      end
     end
-  end
-
-  describe "DELETE destroy" do
-    it "deletes the topic" do
-      delete :destroy, {id: my_topic.id}
-      expect(Post.where({id: my_topic.id}).size).to eq 0
+    
+    describe 'GET edit' do
+      it 'returns http success' do
+        get :edit, {id: my_topic.id}
+        expect(response).to have_http_status(:success)
+      end
+  
+      it 'renders the edit view' do
+        get :edit, {id: my_topic.id}
+        expect(response).to render_template(:edit)
+      end
+      
+      it 'assigns topic to be edited to @topic' do
+        get :edit, {id: my_topic.id}
+        topic_instance = assigns(:topic)
+        
+        expect(topic_instance.id).to eq my_topic.id
+        expect(topic_instance.name).to eq my_topic.name
+        expect(topic_instance.description).to eq my_topic.description
+      end
     end
-
-    it "redirects to the topic index" do
-      delete :destroy, {id: my_topic.id}
-      expect(response).to redirect_to topics_path
+  
+    describe 'PUT update' do
+      it 'updates topic with expected attributes' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+        
+        updated_topic = assigns(:topic)
+        expect(updated_topic.id).to eq my_topic.id
+        expect(updated_topic.name).to eq new_name
+        expect(updated_topic.description).to eq new_description
+      end
+      
+      it 'redirects to the new topic' do
+        new_name = RandomData.random_sentence
+        new_description = RandomData.random_paragraph
+        
+        put :update, id: my_topic.id, topic: {name: new_name, description: new_description}
+        expect(response).to redirect_to my_topic
+      end
     end
   end
 end
+

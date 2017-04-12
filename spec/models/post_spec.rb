@@ -36,40 +36,47 @@ RSpec.describe Post, type: :model do
         @down_votes = post.votes.where(value: -1).count
       end
       
-    describe "up_votes" do
-      it "counts up the number of up votes" do
-        expect( post.up_votes ).to eq(@up_votes)
-      end
-    end
-    
-    describe "down_votes" do
-      it "counts up the number of down votes" do
-        expect( post.down_votes ).to eq(@down_votes)
-      end
-    end
-    
-    describe "points" do
-      it "sums up the up and down votes" do
-        expect( post.points ).to eq(@up_votes - @down_votes)
-      end
-    end
-    
-    describe "#update_rank" do
-      it "calculates the correct rank" do
-        post.update_rank
-        expect(post.rank).to eq (post.points + (post.created_at - Time.new(1970, 1, 1))/1.day.seconds)
+      describe "up_votes" do
+        it "counts up the number of up votes" do
+          expect( post.up_votes ).to eq(@up_votes)
+        end
       end
       
-      it "updates the rank when an up vote is created" do
-        old_rank = post.rank
-        post.votes.create!(value:1)
-        expect(post.rank).to eq (old_rank + 1)
+      describe "down_votes" do
+        it "counts up the number of down votes" do
+          expect( post.down_votes ).to eq(@down_votes)
+        end
       end
       
-      it "updates the rank when a down vote is created" do
-        old_rank = post.rank
-        post.votes.create!(value: -1)
-        expect(post.rank).to eq (old_rank - 1)
+      describe "points" do
+        it "sums up the up and down votes" do
+          expect( post.points ).to eq(@up_votes - @down_votes)
+        end
       end
-  end
+      
+      describe "#update_rank" do
+        it "calculates the correct rank" do
+          post.update_rank
+          expect(post.rank).to eq (post.points + (post.created_at - Time.new(1970, 1, 1))/1.day.seconds)
+        end
+        
+        it "updates the rank when an up vote is created" do
+          old_rank = post.rank
+          post.votes.create!(value:1)
+          expect(post.rank).to eq (old_rank + 1)
+        end
+        
+        it "updates the rank when a down vote is created" do
+          old_rank = post.rank
+          post.votes.create!(value: -1)
+          expect(post.rank).to eq (old_rank - 1)
+        end
+      end
+    end
+    
+    describe "create_vote" do
+      it "creates a vote after a post has been created" do
+        expect(post.up_votes).to eq(1)
+      end
+    end
 end

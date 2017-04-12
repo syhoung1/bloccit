@@ -6,6 +6,7 @@ RSpec.describe VotesController, type: :controller do
   let(:other_user) { User.create!(name: RandomData.random_name, password: RandomData.random_sentence, email: RandomData.random_email, role: :member) }
   let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
   let(:user_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user) }
+  let(:other_user_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: other_user) }
   let(:my_vote) { Vote.create!(value: 1) }
   
   context "guest" do
@@ -32,9 +33,9 @@ RSpec.describe VotesController, type: :controller do
     
     describe "POST up_vote" do
       it "increases the user's vote count by 1 the first time only" do
-        votes = user_post.votes.count
-        post :up_vote, post_id: user_post.id
-        expect(user_post.votes.count).to eq(votes + 1)
+        votes = other_user_post.votes.count
+        post :up_vote, post_id: other_user_post.id
+        expect(other_user_post.votes.count).to eq(votes + 1)
       end
       
       it "does not increase the number of votes the second time and on" do
@@ -45,9 +46,9 @@ RSpec.describe VotesController, type: :controller do
       end
       
       it "increase the sum of votes by 1" do
-        points = user_post.points
-        post :up_vote, post_id: user_post.id
-        expect(user_post.points).to eq(points + 1)
+        points = other_user_post.points
+        post :up_vote, post_id: other_user_post.id
+        expect(other_user_post.points).to eq(points + 1)
       end
       
       it ":back redirects to posts show page" do
@@ -65,9 +66,9 @@ RSpec.describe VotesController, type: :controller do
     
     describe "POST down_vote" do
       it "increases the number of votes by 1" do
-        votes = user_post.votes.count
-        post :down_vote, post_id: user_post.id
-        expect(user_post.votes.count).to eq(votes + 1)
+        votes = other_user_post.votes.count
+        post :down_vote, post_id: other_user_post.id
+        expect(other_user_post.votes.count).to eq(votes + 1)
       end
       
       it "does not increase the number of votes the second time" do
@@ -78,9 +79,9 @@ RSpec.describe VotesController, type: :controller do
       end
       
       it "decreases the sum of post votes by 1" do
-        points = user_post.points
-        post :down_vote, post_id: user_post.id
-        expect(user_post.points).to eq(points - 1)
+        points = other_user_post.points
+        post :down_vote, post_id: other_user_post.id
+        expect(other_user_post.points).to eq(points - 1)
       end
       
       it ":back redirects to posts show page" do

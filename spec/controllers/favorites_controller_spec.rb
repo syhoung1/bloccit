@@ -3,8 +3,10 @@ include SessionsHelper
 
 RSpec.describe FavoritesController, type: :controller do
   let(:my_user) { create(:user) }
+  let(:other_user) { create(:user) }
   let(:my_topic) { create(:topic) }
   let(:my_post) { create(:post, user: my_user, topic: my_topic) }
+  let(:other_post) { create(:post, user: other_user, topic: my_topic) }
   
   context 'guest user' do
     describe 'POST create' do
@@ -17,11 +19,7 @@ RSpec.describe FavoritesController, type: :controller do
     describe 'DELETE destroy' do
       it 'redirects to the sign in view' do
         favorite = my_user.favorites.where(post: my_post).create
-<<<<<<< HEAD
-        delete :destroy, { post_id: my_post.id, id: favorite.id }
-=======
         delete :destroy, { post_id: my_post.id, id: favorite.id}
->>>>>>> checkpoint_31
         expect(response).to redirect_to(new_session_path)
       end
     end
@@ -34,20 +32,15 @@ RSpec.describe FavoritesController, type: :controller do
     
     describe 'POST create' do
       it 'redirects to the posts show view' do
-<<<<<<< HEAD
-        post :create, { post_id: my_post.id }
-        expect(response).to redirect_to([my_post.topic, my_post])
-=======
         favorite = my_user.favorites.where(post: my_post).create
         post :create, { post_id: my_post.id, id: favorite.id}
         expect(response).to redirect_to([my_topic, my_post])
->>>>>>> checkpoint_31
       end
       
       it 'creates a favorite for the specified user and post' do
-        expect(my_user.favorites.find_by_post_id(my_post.id)).to be_nil
-        post :create, { post_id: my_post.id }
-        expect(my_user.favorites.find_by_post_id(my_post.id)).not_to be_nil
+        expect(my_user.favorites.find_by_post_id(other_post.id)).to be_nil
+        post :create, { post_id: other_post.id }
+        expect(my_user.favorites.find_by_post_id(other_post.id)).not_to be_nil
       end
     end
     

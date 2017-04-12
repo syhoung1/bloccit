@@ -69,6 +69,5 @@ RSpec.describe Post, type: :model do
           expect(post.rank).to eq (old_rank - 1)
         end
       end
-    end
   end
 end

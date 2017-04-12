@@ -1,6 +1,13 @@
 class FavoriteMailer < ApplicationMailer
   default from: 'syhoung1@gmail.com'
   
+  def new_post(user, post)
+    @user = user
+    @post = post
+    
+    mail(to: user.email, subject: "You've favorited your new post!")
+  end
+  
   def new_comment(user, post, comment)
     
     headers["Message-ID"] = "<comments/#{comment.id}@rocky-falls.example"

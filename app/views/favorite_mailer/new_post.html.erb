@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+  </head>
+  <body>
+    <h1>New post "<%= @post.title %>"</h1>
+    <small>
+      By: <%= @post.user.name %>
+    </small>
+    <p>
+      <%= @post.body %>
+    </p>
+  </body>
+</html>

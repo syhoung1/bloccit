@@ -17,7 +17,11 @@ RSpec.describe FavoritesController, type: :controller do
     describe 'DELETE destroy' do
       it 'redirects to the sign in view' do
         favorite = my_user.favorites.where(post: my_post).create
+<<<<<<< HEAD
         delete :destroy, { post_id: my_post.id, id: favorite.id }
+=======
+        delete :destroy, { post_id: my_post.id, id: favorite.id}
+>>>>>>> checkpoint_31
         expect(response).to redirect_to(new_session_path)
       end
     end
@@ -30,8 +34,14 @@ RSpec.describe FavoritesController, type: :controller do
     
     describe 'POST create' do
       it 'redirects to the posts show view' do
+<<<<<<< HEAD
         post :create, { post_id: my_post.id }
         expect(response).to redirect_to([my_post.topic, my_post])
+=======
+        favorite = my_user.favorites.where(post: my_post).create
+        post :create, { post_id: my_post.id, id: favorite.id}
+        expect(response).to redirect_to([my_topic, my_post])
+>>>>>>> checkpoint_31
       end
       
       it 'creates a favorite for the specified user and post' do

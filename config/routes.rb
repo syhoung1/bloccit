@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show]
+  
   resources :topics do
     resources :posts, except: [:index]
   end
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
   end
   
   resources :sessions, only: [:new, :create, :destroy]
+  
   get 'about' => 'welcome#about'
 
   get 'welcome/FAQ'

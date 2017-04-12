@@ -1,12 +1,11 @@
 require 'rails_helper'
-
 include SessionsHelper
 
 RSpec.describe PostsController, type: :controller do
-  let(:my_user) { User.create!(name: "johnny", email: "johnny@john.com", password: "thispassword") }
-  let(:other_user) { User.create!(name: "eric", email: "thiseric@eric.com", password: "thatpassword", role: :member) }
-  let(:my_topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
-  let(:my_post) { my_topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: my_user) }
+  let(:my_user) { create(:user) }
+  let(:other_user) { create(:user, role: :member) }
+  let(:my_topic) { create(:topic) }
+  let(:my_post) { create(:post, topic: my_topic, user: my_user) }
 
   context "guest user" do
     describe "GET show" do
@@ -123,7 +122,7 @@ RSpec.describe PostsController, type: :controller do
     describe "GET #edit" do
       it "returns http redirect" do
         get :edit, topic_id: my_topic.id, id: my_post.id
-        expect(response).to redirect_to [my_topic, my_post]
+        expect(response).to redirect_to([my_topic, my_post])
       end
     end
     
@@ -140,7 +139,7 @@ RSpec.describe PostsController, type: :controller do
     describe "DELETE destroy" do
       it "returns http redirect" do
         delete :destroy, topic_id: my_topic.id, id: my_post.id
-        expect(response).to redirect_to [my_topic, my_post]
+        expect(response).to redirect_to [my_post.topic]
       end
     end
   end

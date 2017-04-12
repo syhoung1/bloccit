@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Comment, type: :model do
-  let(:user) { User.create!(name: "johnny", email: "johnny@john.com", password: "thispassword") }
-  let(:topic) { Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph) }
-  let(:post) { topic.posts.create!(title: "New title", body: "New post content new post content", user: user) }
+  let(:user) { create(:user) }
+  let(:topic) { create(:topic) }
+  let(:post) { create(:post) }
   let(:comment) { Comment.create!(body: "Comment", post: post, user: user) }
   
   it { is_expected.to belong_to(:post) }

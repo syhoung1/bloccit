@@ -1,6 +1,10 @@
 class PostsController < ApplicationController
   before_action :require_sign_in, except: :show
+<<<<<<< HEAD
   before_action :authorize_user, only: [:edit]
+=======
+  before_action :authorize_user, only: [:edit, :destroy]
+>>>>>>> checkpoint_30
   
   def show
     @post = Post.find(params[:id])

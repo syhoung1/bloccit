@@ -71,7 +71,10 @@ RSpec.describe Post, type: :model do
       end
     end
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> checkpoint_31
   end
 >>>>>>> checkpoint_30
 end

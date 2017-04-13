@@ -21,7 +21,7 @@ RSpec.describe Post, type: :model do
 
   describe "attributes" do
     it "has title and body attributes" do
-      expect(post).to have_attributes(title: title, body: body, user: user)
+      expect(post).to have_attributes(title: post.title, body: post.body, user: post.user)
     end
   end
   
@@ -36,6 +36,7 @@ RSpec.describe Post, type: :model do
     describe "up_votes" do
       it "counts up the number of up votes" do
         expect( post.up_votes ).to eq(@up_votes)
+      end
     end
     
     describe "down_votes" do

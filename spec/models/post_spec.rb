@@ -22,20 +22,20 @@ RSpec.describe Post, type: :model do
   it { is_expected.to validate_length_of(:title).is_at_least(5) }
   it { is_expected.to validate_length_of(:body).is_at_least(20) }
 
-    describe "attributes" do
-      it "has title and body attributes" do
-        expect(post).to have_attributes(title: title, body: body, user: user)
-      end
+  describe "attributes" do
+    it "has title and body attributes" do
+      expect(post).to have_attributes(title: title, body: body, user: user)
+    end
+  end
+  
+  describe "voting" do
+    before do
+      3.times { post.votes.create!(value: 1) }
+      2.times { post.votes.create!(value: -1) }
+      @up_votes = post.votes.where(value: 1).count
+      @down_votes = post.votes.where(value: -1).count
     end
     
-    describe "voting" do
-      before do
-        3.times { post.votes.create!(value: 1) }
-        2.times { post.votes.create!(value: -1) }
-        @up_votes = post.votes.where(value: 1).count
-        @down_votes = post.votes.where(value: -1).count
-      end
-      
     describe "up_votes" do
       it "counts up the number of up votes" do
         expect( post.up_votes ).to eq(@up_votes)
